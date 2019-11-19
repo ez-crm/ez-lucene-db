@@ -7,9 +7,40 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>ezdb</name>
+  <name>ez-lucene-db</name>
   <url>http://maven.apache.org</url>
+  <description>Based on JDK 1.8  Lucene 8.3.x search framework</description>
 
+	<issueManagement>
+		<system>Github Issue</system>
+		<url>https://github.com/ez-crm/ez-lucene-db/issues</url>
+	</issueManagement>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>ez-lucene-db</id>
+			<name>ez-crm</name>
+			<email>xudingbing@foxmail.com</email>
+			<url>https://github.com/ez-crm</url>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:git@github.com:ez-crm/ez-lucene-db.git</connection>
+		<developerConnection>scm:git:git@github.com:ez-crm/ez-lucene-db.git</developerConnection>
+		<url>git@github.com:ez-crm/ez-lucene-db.git</url>
+	</scm>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+	
   <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -72,14 +103,59 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-      <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.*</include>
-                </includes>
-            </resource>
-        </resources>    	
-    </build>
+  
+  	<distributionManagement>
+		<snapshotRepository>
+			<id>deployezlucenedb</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>deployezlucenedb</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
+	
+		<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
