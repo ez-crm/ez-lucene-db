@@ -1,0 +1,5 @@
+/ez-lucene-db/target
+/ez-lucene-db/*.classpath
+/ez-lucene-db/*.project
+/ez-lucene-db/.settings
+/ez-lucene-db/docs
