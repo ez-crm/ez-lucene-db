@@ -39,18 +39,18 @@ public final class IndexAction implements Runnable {
 		this.config = config;
 	}
 
-	private synchronized long writeAction(UpdateTask task, boolean commit) {
+	private synchronized long writeAction(UpdateType taskType, Document documentIfWrite, Term TermIfDelete, Query queryIfDelete, boolean commit) {
 		try {
 			long result = 0;
-			switch (task.getUpdateType()) {
+			switch (taskType) {
 			case WRITE:
-				result = indexWriter.addDocument(task.getWriteDocument());
+				result = indexWriter.addDocument(documentIfWrite);
 				break;
 			case DELETE:
-				if (task.getDeleteTerm() != null)
-					result = indexWriter.deleteDocuments(task.getDeleteTerm());
-				if (task.getDeleteQuery() != null)
-					result = indexWriter.deleteDocuments(task.getDeleteQuery());
+				if (TermIfDelete != null)
+					result = indexWriter.deleteDocuments(TermIfDelete);
+				if (queryIfDelete != null)
+					result = indexWriter.deleteDocuments(queryIfDelete);
 				break;
 			case MERGE:
 				indexWriter.maybeMerge();
@@ -63,7 +63,7 @@ public final class IndexAction implements Runnable {
 			return result;
 		} catch (IOException e) {
 			logger.severe(
-					MyLog.stackTrace(e, String.format("UpdateTask  %s fail:", task.getUpdateType().name())).toString());
+					MyLog.stackTrace(e, String.format("UpdateTask  %s fail:", taskType.name())).toString());
 			return 0;
 		}
 	}
@@ -133,7 +133,7 @@ public final class IndexAction implements Runnable {
 		boolean added = false;
 		LinkedList<Long> result = new LinkedList<>();
 		for (Document doc : docs) {
-			long code = writeAction(new UpdateTask(doc), false);
+			long code = writeAction(UpdateType.WRITE, doc, null, null, false);
 			result.add(code);
 			if (code > 0) {
 				added = true;
@@ -150,21 +150,21 @@ public final class IndexAction implements Runnable {
 		if (indexWriter == null) {
 			init();
 		}
-		return writeAction(new UpdateTask(doc), true);
+		return writeAction(UpdateType.WRITE, doc, null, null, true);
 	}
 
 	public long delete(Term term) {
 		if (indexWriter == null) {
 			init();
 		}
-		return writeAction(new UpdateTask(term), true);
+		return writeAction(UpdateType.DELETE, null, term, null, true);
 	}
 
 	public long delete(Query query) {
 		if (indexWriter == null) {
 			init();
 		}
-		return writeAction(new UpdateTask(query), true);
+		return writeAction(UpdateType.DELETE, null, null, query, true);
 	}
 
 	public TopDocs search(Query query, int offset) throws IOException {

@@ -3,3 +3,5 @@
 /ez-lucene-db/*.project
 /ez-lucene-db/.settings
 /ez-lucene-db/docs
+/ez-lucene-db/testindex
+/ez-lucene-db/src/test
