@@ -4,11 +4,10 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.search.Query;
-import org.junit.Before;
 import org.junit.Test;
 
 import top.topwow.service.search.IndexManager;
@@ -17,12 +16,7 @@ import top.topwow.util.Utils;
 
 public class TestQuery {
 
-	private IndexManager indexManager;
-
-	@Before
-	public void setUp() {
-		indexManager = App.getInject().getInstance(IndexManager.class);
-	}
+	private IndexManager indexManager = IndexManager.me;
 
 	public void write() throws InterruptedException {
 

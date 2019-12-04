@@ -47,7 +47,6 @@
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>    	
         <java.version>1.8</java.version>
         <lunece.version>8.3.0</lunece.version>
-        <guice.version>4.2.2</guice.version>
   </properties>
 
   <dependencies>
@@ -80,21 +79,6 @@
 	    <groupId>commons-codec</groupId>
 	    <artifactId>commons-codec</artifactId>
 	    <version>1.13</version>
-	</dependency>
-	<dependency>
-	    <groupId>com.google.inject</groupId>
-	    <artifactId>guice</artifactId>
-	    <version>${guice.version}</version>
-	</dependency>
-	<dependency>
-	    <groupId>com.google.inject.extensions</groupId>
-	    <artifactId>guice-assistedinject</artifactId>
-	    <version>${guice.version}</version>
-	</dependency>
-	<dependency>
-	    <groupId>com.google.inject.extensions</groupId>
-	    <artifactId>guice-multibindings</artifactId>
-	    <version>${guice.version}</version>
 	</dependency>
     <dependency>
       <groupId>junit</groupId>

@@ -6,7 +6,6 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.document.StringField;
-import org.junit.Before;
 import org.junit.Test;
 
 import top.topwow.service.search.IndexManager;
@@ -14,12 +13,8 @@ import top.topwow.util.Utils;
 
 public class TestWrite {
 
-	private IndexManager indexManager;
+	private IndexManager indexManager=IndexManager.me;
 
-	@Before
-	public void setUp() {
-		indexManager = App.getInject().getInstance(IndexManager.class);
-	}
 
 	@Test
 	public void write() throws InterruptedException {

@@ -12,18 +12,15 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import top.topwow.config.Config;
 
-@Singleton
+
 public class DB {
 
 	private ConcurrentHashMap<String, IndexAction> map = new ConcurrentHashMap<>();
 
-	@Inject
-	private Config config;
+	public static DB me = new DB();
+	private Config config = Config.me;
 
 	private IndexAction getindexAction(String path) {
 		IndexAction indexAction = map.get(path);

@@ -1,13 +1,11 @@
 package top.topwow.config;
 
-import com.google.inject.Singleton;
-
-@Singleton
 public class Config extends PropertiesConfigBase {
 
 	private int mergeFactor;
 	private int maxBufferedDocs;
 
+	public static Config me=new Config(); 
 	@Override
 	public String getFileName() {
 		return "conf/config.ini";

@@ -18,12 +18,11 @@ import top.topwow.service.search.IndexManager;
 import top.topwow.util.Utils;
 
 public class TestPerformace {
-	private IndexManager indexManager;
+	private IndexManager indexManager = IndexManager.me;
 	ThreadPoolExecutor executor;
 
 	@Before
 	public void setUp() {
-		indexManager = App.getInject().getInstance(IndexManager.class);
 		executor = new ThreadPoolExecutor(50, // 核心池大小
 				50000, // 最大池大小
 				200, // 线程最大空闲时间,超过此空闲时间可以被收回
