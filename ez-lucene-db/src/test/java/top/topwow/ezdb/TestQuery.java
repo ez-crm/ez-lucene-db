@@ -18,6 +18,23 @@ public class TestQuery {
 
 	private IndexManager indexManager = IndexManager.me;
 
+	@Test
+	public void queryTotal() throws IOException, InterruptedException {
+		try {
+			Document doc = new Document();
+			doc.add(new StringField("id", Utils.getUUID(), Store.YES));
+			doc.add(new StringField("content", "Document content:" + Utils.getUUID(), Store.YES));
+			doc.add(new LongPoint("time", System.currentTimeMillis()));
+			indexManager.insert("testindex", doc);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Query query = LongPoint.newRangeQuery("time", 0, System.currentTimeMillis());
+		long total = indexManager.queryTotal("testindex", query);
+		System.out.println("total="+total);
+		boolean exist = indexManager.queryExist("testindex", query);
+		System.out.println("exist="+exist);
+	}
 	public void write() throws InterruptedException {
 
 		for (int i = 0; i < 200; i++) {
@@ -42,7 +59,7 @@ public class TestQuery {
 	 * Occur.MUST_NOT条件不能仅包含自己
 	 */
 
-	@Test
+	//@Test
 	public void query() throws InterruptedException {
 
 		write();// 先写入数据，再边查询边删除

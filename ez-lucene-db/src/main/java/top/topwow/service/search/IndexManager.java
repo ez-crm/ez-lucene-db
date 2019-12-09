@@ -60,10 +60,13 @@ public class IndexManager {
 	public long queryTotal(String path, Query query) throws IOException {
 		IndexAction indexAction = getindexAction(path);
 		TopDocs topDocs = indexAction.search(query, Integer.MAX_VALUE);
-
 		return topDocs.totalHits.value;
 	}
-
+	public boolean queryExist(String path, Query query) throws IOException {
+		IndexAction indexAction = getindexAction(path);
+		TopDocs topDocs = indexAction.search(query, 1);
+		return topDocs.totalHits.value > 0L;
+	}
 	public List<Document> query(String path, Query query, Page page) throws IOException {
 		IndexAction indexAction = getindexAction(path);
 

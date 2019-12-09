@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -20,7 +19,8 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.AlreadyClosedException;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.NativeFSLockFactory;
+import org.apache.lucene.store.NoLockFactory;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import top.topwow.config.Config;
 import top.topwow.util.MyLog;
@@ -44,16 +44,16 @@ public final class IndexAction implements Runnable {
 			long result = 0;
 			switch (taskType) {
 			case WRITE:
-				result = indexWriter.addDocument(documentIfWrite);
+				result = getIndexWriter().addDocument(documentIfWrite);
 				break;
 			case DELETE:
 				if (TermIfDelete != null)
-					result = indexWriter.deleteDocuments(TermIfDelete);
+					result = getIndexWriter().deleteDocuments(TermIfDelete);
 				if (queryIfDelete != null)
-					result = indexWriter.deleteDocuments(queryIfDelete);
+					result = getIndexWriter().deleteDocuments(queryIfDelete);
 				break;
 			case MERGE:
-				indexWriter.maybeMerge();
+				getIndexWriter().maybeMerge();
 				break;
 			}
 
@@ -70,7 +70,7 @@ public final class IndexAction implements Runnable {
 
 	private void commitAndRefreshReader() {
 		try {
-			indexWriter.commit();
+			getIndexWriter().commit();
 		} catch (Exception e) {
 			logger.severe(MyLog.stackTrace(e, "提交异常").toString());
 		}
@@ -80,7 +80,7 @@ public final class IndexAction implements Runnable {
 
 	private void refreshReader() {
 		try {
-			IndexReader changeReader = DirectoryReader.open(indexWriter);
+			IndexReader changeReader = DirectoryReader.open(getIndexWriter());
 			changeNewReader(changeReader);
 		} catch (Exception e) {
 			logger.severe(MyLog.stackTrace(e, "刷新Reader异常").toString());
@@ -91,7 +91,7 @@ public final class IndexAction implements Runnable {
 	@SuppressWarnings("unused")
 	private void commitAndRefreshReaderOld() {
 		try {
-			indexWriter.commit();
+			getIndexWriter().commit();
 			if (!startReaderCheck) {
 				synchronized (this) {
 					if (!startReaderCheck) {
@@ -169,7 +169,7 @@ public final class IndexAction implements Runnable {
 
 	public TopDocs search(Query query, int offset) throws IOException {
 		try {
-			return indexSearcher.search(query, offset);
+			return getIndexSearcher().search(query, offset);
 		} catch (AlreadyClosedException e) {
 			refreshReader();
 			return search(query, offset);
@@ -178,7 +178,7 @@ public final class IndexAction implements Runnable {
 
 	public Document document(int docID) throws IOException {
 		try {
-			return indexReader.document(docID);
+			return getIndexReader().document(docID);
 		} catch (AlreadyClosedException e) {
 			refreshReader();
 			return document(docID);
@@ -193,14 +193,14 @@ public final class IndexAction implements Runnable {
 	}
 
 	protected IndexReader getIndexReader() {
-		if (indexWriter == null) {
+		if (indexReader == null) {
 			init();
 		}
 		return indexReader;
 	}
 
 	public IndexSearcher getIndexSearcher() {
-		if (indexWriter == null) {
+		if (indexSearcher == null) {
 			init();
 		}
 		return indexSearcher;
@@ -213,13 +213,13 @@ public final class IndexAction implements Runnable {
 		}
 
 		try {
-			Analyzer analyzer = new CJKAnalyzer();
+			Analyzer analyzer = new IKAnalyzer();
 			IndexWriterConfig conf = new IndexWriterConfig(analyzer);
 			conf.setCommitOnClose(true);
 			conf.setOpenMode(OpenMode.CREATE_OR_APPEND);
 			conf.setMaxBufferedDocs(config.getMaxBufferedDocs());
 
-			indexWriter = new IndexWriter(FSDirectory.open(new File(path).toPath(), NativeFSLockFactory.INSTANCE),
+			indexWriter = new IndexWriter(FSDirectory.open(new File(path).toPath(), NoLockFactory.INSTANCE),
 					conf);
 
 			indexReader = DirectoryReader.open(indexWriter);

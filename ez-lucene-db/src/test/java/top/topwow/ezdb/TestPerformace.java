@@ -37,7 +37,7 @@ public class TestPerformace {
 	1000个线程任务完毕，每个线程1000条记录，提交了1000000条记录，查询到1000000，测试完成，耗费时间60秒。(推荐)
 	100个线程任务完毕，每个线程10000条记录，提交了1000000条记录，查询到1000000，测试完成，耗费时间59秒。
 	 */
-	@Test
+	//@Test
 	public void write() throws InterruptedException {
 
 		long time = System.currentTimeMillis();

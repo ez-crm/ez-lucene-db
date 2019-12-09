@@ -16,7 +16,7 @@ public class TestWrite {
 	private IndexManager indexManager=IndexManager.me;
 
 
-	@Test
+	//@Test
 	public void write() throws InterruptedException {
 
 		for (int i = 0; i < 200; i++) {

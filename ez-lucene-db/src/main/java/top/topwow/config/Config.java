@@ -2,8 +2,8 @@ package top.topwow.config;
 
 public class Config extends PropertiesConfigBase {
 
-	private int mergeFactor;
-	private int maxBufferedDocs;
+	private int mergeFactor=10;
+	private int maxBufferedDocs=1000;
 
 	public static Config me=new Config(); 
 	@Override
